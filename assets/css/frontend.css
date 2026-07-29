@@ -1,0 +1,244 @@
+/* Resources Manager - front-end sidebar & grid styles */
+
+.pml-archive-layout {
+	display: grid;
+	grid-template-columns: 260px 1fr;
+	gap: 28px;
+	max-width: 1140px;
+	margin: 0 auto;
+	padding: 20px 0;
+	align-items: start;
+}
+
+/* Sidebar & Widgets */
+.pml-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.pml-widget {
+	background: #f8f9fa;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.pml-widget-title {
+	margin: 0 0 14px 0;
+	font-size: 15px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #2d3748;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #e2e8f0;
+}
+
+/* Date Filter Form */
+.pml-date-form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.pml-field-group {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.pml-field-group label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #4a5568;
+	text-transform: uppercase;
+}
+
+.pml-field-group select {
+	width: 100%;
+	padding: 8px 10px;
+	border-radius: 6px;
+	border: 1px solid #cbd5e0;
+	background: #fff;
+	font-size: 14px;
+	color: #2d3748;
+}
+
+.pml-date-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.pml-btn {
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	padding: 10px 16px;
+	background: #2271b1;
+	color: #fff !important;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	transition: background 0.15s ease;
+}
+.pml-btn:hover { background: #135e96; }
+
+.pml-btn-clear {
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	color: #718096 !important;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.pml-btn-clear:hover { color: #2d3748 !important; }
+
+/* Category Navigation List */
+.pml-cat-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.pml-cat-item a {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 9px 12px;
+	border-radius: 6px;
+	text-decoration: none;
+	color: #4a5568;
+	font-size: 14px;
+	font-weight: 500;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pml-cat-item a:hover {
+	background: #edf2f7;
+	color: #1a202c;
+}
+
+.pml-cat-item.is-active a {
+	background: #2271b1;
+	color: #fff;
+	font-weight: 600;
+}
+
+.pml-cat-count {
+	font-size: 11px;
+	padding: 2px 7px;
+	border-radius: 10px;
+	background: #e2e8f0;
+	color: #4a5568;
+}
+
+.pml-cat-item.is-active .pml-cat-count {
+	background: rgba(255,255,255,0.25);
+	color: #fff;
+}
+
+/* Main Content & Grid */
+.pml-main-content {
+	min-width: 0;
+}
+
+.pml-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+	gap: 20px;
+}
+
+.pml-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #e2e2e2;
+	border-radius: 10px;
+	overflow: hidden;
+	text-decoration: none;
+	color: inherit;
+	background: #fff;
+	transition: box-shadow .15s ease, transform .15s ease;
+}
+.pml-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.08); transform: translateY(-2px); }
+
+.pml-card-icon {
+	height: 160px;
+	background: #f8f9fa;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+}
+.pml-card-icon img { width: 100%; height: 100%; object-fit: cover; }
+.pml-card-icon .pml-pdf-canvas {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+.pml-pdf-icon {
+	font-weight: 800;
+	letter-spacing: 1px;
+	color: #c0392b;
+	border: 2px solid #c0392b;
+	border-radius: 6px;
+	padding: 8px 14px;
+	font-size: 14px;
+}
+.pml-pdf-fallback {
+	margin: auto;
+}
+.pml-card-body { padding: 14px 16px; }
+.pml-card-title { margin: 0 0 8px; font-size: 16px; line-height: 1.3; }
+.pml-card-meta { font-size: 12px; color: #666; display: flex; flex-direction: column; gap: 4px; }
+
+.pml-pagination { margin-top: 28px; display: flex; gap: 6px; flex-wrap: wrap; }
+.pml-pagination .page-numbers {
+	padding: 6px 11px;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	text-decoration: none;
+	color: inherit;
+}
+.pml-pagination .page-numbers.current { background: #2271b1; color: #fff; border-color: #2271b1; }
+
+.pml-no-results { padding: 30px; text-align: center; color: #666; }
+
+/* Single PDF page */
+.pml-single { max-width: 900px; margin: 0 auto; padding: 20px 0; }
+.pml-back-link a { text-decoration: none; color: #2271b1; font-size: 14px; }
+.pml-single-title { margin: 8px 0 4px; }
+.pml-single-meta { color: #666; font-size: 13px; margin-bottom: 18px; display: flex; gap: 14px; }
+.pml-single-meta a { color: inherit; }
+.pml-single-description { margin-bottom: 20px; line-height: 1.6; }
+
+.pml-embed-wrap {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #f5f5f5;
+}
+.pml-embed-frame { width: 100%; height: 85vh; border: none; display: block; }
+
+.pml-download { margin-top: 16px; }
+.pml-no-file { color: #a33; }
+
+@media (max-width: 768px) {
+	.pml-archive-layout {
+		grid-template-columns: 1fr;
+	}
+	.pml-embed-frame { height: 70vh; }
+}
+
