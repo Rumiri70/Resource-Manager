@@ -260,6 +260,26 @@ function pml_get_archive_years() {
 	return $results;
 }
 
+/**
+ * Build the list of months that have at least one PDF published, for date filter dropdown.
+ */
+function pml_get_archive_months( $year = 0 ) {
+	global $wpdb;
+	if ( $year ) {
+		$results = $wpdb->get_col( $wpdb->prepare(
+			"SELECT DISTINCT MONTH(post_date) FROM {$wpdb->posts} WHERE post_type = %s AND post_status = 'publish' AND YEAR(post_date) = %d ORDER BY MONTH(post_date) ASC",
+			'pdf_doc',
+			$year
+		) );
+	} else {
+		$results = $wpdb->get_col( $wpdb->prepare(
+			"SELECT DISTINCT MONTH(post_date) FROM {$wpdb->posts} WHERE post_type = %s AND post_status = 'publish' ORDER BY MONTH(post_date) ASC",
+			'pdf_doc'
+		) );
+	}
+	return array_map( 'absint', $results );
+}
+
 /* ------------------------------------------------------------------------
  * 9. Shortcodes: [resources_manager], [resources_grid], [pdf_archive]
  *    Lets the resources grid be embedded inside any page slug.

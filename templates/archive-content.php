@@ -7,12 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$categories    = get_terms( array( 'taxonomy' => 'pdf_category', 'hide_empty' => false ) );
-$years         = pml_get_archive_years();
-$current_cat   = isset( $_GET['pdf_cat'] ) ? sanitize_title( wp_unslash( $_GET['pdf_cat'] ) ) : '';
-$current_year  = isset( $_GET['pdf_year'] ) ? absint( $_GET['pdf_year'] ) : '';
-$current_month = isset( $_GET['pdf_month'] ) ? absint( $_GET['pdf_month'] ) : '';
-$months        = array(
+$categories       = get_terms( array( 'taxonomy' => 'pdf_category', 'hide_empty' => true ) );
+$years            = pml_get_archive_years();
+$current_cat      = isset( $_GET['pdf_cat'] ) ? sanitize_title( wp_unslash( $_GET['pdf_cat'] ) ) : '';
+$current_year     = isset( $_GET['pdf_year'] ) ? absint( $_GET['pdf_year'] ) : '';
+$current_month    = isset( $_GET['pdf_month'] ) ? absint( $_GET['pdf_month'] ) : '';
+$available_months = pml_get_archive_months( $current_year );
+$months           = array(
 	1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
 	5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
 	9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
@@ -60,9 +61,11 @@ $total_published = wp_count_posts( 'pdf_doc' )->publish;
 					<select name="pdf_month" id="pml_month">
 						<option value=""><?php _e( 'All Months', 'pdf-manager-lite' ); ?></option>
 						<?php foreach ( $months as $num => $label ) : ?>
-							<option value="<?php echo esc_attr( $num ); ?>" <?php selected( $current_month, $num ); ?>>
-								<?php echo esc_html( $label ); ?>
-							</option>
+							<?php if ( empty( $available_months ) || in_array( $num, $available_months, true ) ) : ?>
+								<option value="<?php echo esc_attr( $num ); ?>" <?php selected( $current_month, $num ); ?>>
+									<?php echo esc_html( $label ); ?>
+								</option>
+							<?php endif; ?>
 						<?php endforeach; ?>
 					</select>
 				</div>
