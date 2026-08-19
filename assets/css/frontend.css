@@ -3,10 +3,9 @@
 .pml-archive-layout {
 	display: grid;
 	grid-template-columns: 280px 1fr;
-	gap: 32px;
+	gap: 5px;
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 24px 0;
 	align-items: start;
 
 }
@@ -15,45 +14,42 @@
 .pml-sidebar {
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
+	gap: 4px;
 }
 
 .pml-widget {
-	background: #ffffff;
 	border: 1px solid #e2e8f0;
-	border-radius: 12px;
-	padding: 22px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+	border-radius: 5px;
+	padding: 6px 10px;
+	box-shadow: 0 4px 2px rgba(0, 0, 0, 0.03);
 }
 
 .pml-widget-title {
-	margin: 0 0 16px 0;
-	color: #1a202c;
-	padding-bottom: 10px;
-	border-bottom: 2px solid #edf2f7;
+	margin: 0 0 6px 0;
+	font-size: inherit !important;
 }
 
 /* Date Filter Form */
 .pml-date-form {
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
+	gap: 1px;
 }
 
 .pml-field-group {
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 2px;
 }
 
 .pml-field-group label {
-	text-transform: uppercase;
 	letter-spacing: 0.5px;
+	display: none;
 }
 
 .pml-field-group select {
 	width: 100%;
-	padding: 9px 12px;
+	padding: 4px 2px;
 	border-radius: 8px;
 	border: 1px solid #cbd5e0;
 	background: #f8fafc;
@@ -72,21 +68,9 @@
 .pml-date-actions {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	margin-top: 6px;
+	gap: 1px;
+	margin-top: 2px;
 }
-
-.pml-btn {
-	display: inline-block;
-	width: 100%;
-	text-align: center;
-	padding: 11px 16px;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	transition: background 0.2s ease, transform 0.1s ease;
-}
-
 
 
 .pml-btn:active {
@@ -113,32 +97,28 @@
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 2px;
 }
 
 .pml-cat-item a {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 10px 14px;
+	padding: 4px 14px;
 	border-radius: 8px;
 	text-decoration: none;
-	color: #4a5568;
 	font-size: 14px;
-	font-weight: 500;
-	background: transparent;
 	transition: background 0.2s ease, color 0.2s ease;
 }
 
 .pml-cat-item a:hover {
 	background: #f1f5f9;
-	color: #1a202c;
+	color: #76AB24;
 }
 
 .pml-cat-item.is-active a {
-	background: #2271b1;
+	background: #76AB24;
 	color: #ffffff;
-	font-weight: 600;
 }
 
 .pml-cat-name {
@@ -149,17 +129,14 @@
 }
 
 .pml-cat-count {
-	font-size: 11px;
-	font-weight: 600;
+	font-size: 14px;
 	padding: 3px 8px;
 	border-radius: 12px;
-	background: #e2e8f0;
-	color: #4a5568;
+	color: #76AB24;
 	margin-left: 8px;
 }
 
 .pml-cat-item.is-active .pml-cat-count {
-	background: rgba(255, 255, 255, 0.25);
 	color: #ffffff;
 }
 
@@ -171,14 +148,14 @@
 .pml-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-	gap: 24px;
+	gap: 4px;
 }
 
 .pml-card {
 	display: flex;
 	flex-direction: column;
 	border: 1px solid #e2e8f0;
-	border-radius: 12px;
+	border-radius: 8px;
 	overflow: hidden;
 	text-decoration: none;
 	color: inherit;
@@ -188,13 +165,12 @@
 }
 
 .pml-card:hover {
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-	transform: translateY(-3px);
+	box-shadow: 0 1px 25px rgba(0, 0, 0, 0.08);
+	transform: translateY(-1px);
 }
 
 .pml-card-icon {
-	height: 165px;
-	background: #f8fafc;
+	height: 25vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -219,7 +195,7 @@
 .pml-pdf-icon {
 	font-weight: 800;
 	letter-spacing: 1px;
-	color: #c0392b;
+	color: #76AB24;
 	border: 2px solid #c0392b;
 	border-radius: 6px;
 	padding: 8px 14px;
@@ -231,18 +207,17 @@
 }
 
 .pml-card-body {
-	padding: 16px;
+	padding: 6px;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 3px;
 }
 
 .pml-card-title {
 	margin: 0;
-	font-size: 15px;
-	font-weight: 600;
+	font-size: inherit;
 	line-height: 1.4;
-	color: #1a202c;
+	color: #76AB24;
 }
 
 .pml-card-meta {
@@ -254,8 +229,12 @@
 }
 
 .pml-card-cats {
-	color: #2271b1;
+	color: #ffff;
+	background: #76AB24;
 	font-weight: 500;
+	width: 100% ;
+	padding: 3px;
+	
 }
 
 .pml-pagination {
@@ -266,24 +245,24 @@
 }
 
 .pml-pagination .page-numbers {
-	padding: 8px 14px;
+	background: #76AB24;
+	padding: 4px;
 	border: 1px solid #cbd5e0;
 	border-radius: 8px;
 	text-decoration: none;
-	color: #4a5568;
+	color: #ffff;
 	font-weight: 500;
 	transition: background 0.2s, color 0.2s;
 }
 
 .pml-pagination .page-numbers:hover {
 	background: #f1f5f9;
-	color: #1a202c;
+	color: #76AB24;
 }
 
 .pml-pagination .page-numbers.current {
-	background: #2271b1;
+	background: #76AB24;
 	color: #ffffff;
-	border-color: #2271b1;
 }
 
 .pml-no-results {
