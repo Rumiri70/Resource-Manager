@@ -153,9 +153,11 @@ $total_published = wp_count_posts( 'pdf_doc' )->publish;
 								$terms = get_the_terms( get_the_ID(), 'pdf_category' );
 								if ( $terms && ! is_wp_error( $terms ) ) :
 									?>
-									<span class="pml-card-cats">
-										<?php echo esc_html( implode( ', ', wp_list_pluck( $terms, 'name' ) ) ); ?>
-									</span>
+									<div class="pml-card-cats">
+										<?php foreach ( $terms as $term ) : ?>
+											<span class="pml-cat-pill"><?php echo esc_html( $term->name ); ?></span>
+										<?php endforeach; ?>
+									</div>
 								<?php endif; ?>
 							</div>
 						</div>

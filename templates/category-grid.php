@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Template partial: category grid.
  * Used exclusively by the [resources_category] shortcode (pml_shortcode_category).
@@ -47,9 +47,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<div class="pml-card-meta">
 							<span class="pml-card-date"><?php echo esc_html( get_the_date() ); ?></span>
 							<?php if ( $terms && ! is_wp_error( $terms ) ) : ?>
-								<span class="pml-card-cats">
-									<?php echo esc_html( implode( ', ', wp_list_pluck( $terms, 'name' ) ) ); ?>
-								</span>
+								<div class="pml-card-cats">
+									<?php foreach ( $terms as $term ) : ?>
+										<span class="pml-cat-pill"><?php echo esc_html( $term->name ); ?></span>
+									<?php endforeach; ?>
+								</div>
 							<?php endif; ?>
 						</div>
 					</div>
