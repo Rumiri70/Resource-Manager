@@ -3,7 +3,7 @@
  * Plugin Name: Resources Manager
  * Plugin URI:  https://sibasi.co.ke
  * Description: A lightweight plugin to manage resources (PDF documents) with categories. Gives admins a simple upload workflow and viewers a filterable archive page or shortcode grid.
- * Version:     1.0.3
+ * Version:     1.0.4
  * Author:      Sibasi Ltd
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'PML_VERSION', '1.0.3' );
+define( 'PML_VERSION', '1.0.4' );
 define( 'PML_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PML_URL', plugin_dir_url( __FILE__ ) );
 
@@ -38,8 +38,8 @@ function pml_register_post_type() {
 	register_post_type( 'pdf_doc', array(
 		'labels'          => $labels,
 		'public'          => true,
-		'has_archive'     => true,
-		'rewrite'         => array( 'slug' => 'resources', 'with_front' => false ),
+		'has_archive'     => false, // Disabled default CPT archive so /resources/ can be created as a custom Elementor page.
+		'rewrite'         => array( 'slug' => 'resource', 'with_front' => false ),
 		'menu_icon'       => 'dashicons-media-document',
 		'supports'        => array( 'title', 'editor', 'thumbnail' ),
 		'show_in_rest'    => false,
@@ -295,10 +295,10 @@ add_action( 'wp_enqueue_scripts', 'pml_frontend_assets' );
 
 /* ------------------------------------------------------------------------
  * 6. Template loader — use plugin templates unless the active theme
- *    provides its own archive-pdf_doc.php / single-pdf_doc.php
+ *    provides its own single-pdf_doc.php / archive-pdf_doc.php
  * ---------------------------------------------------------------------- */
 function pml_template_loader( $template ) {
-	if ( is_post_type_archive( 'pdf_doc' ) || is_tax( 'pdf_category' ) ) {
+	if ( is_tax( 'pdf_category' ) ) {
 		$theme_file = locate_template( array( 'archive-pdf_doc.php' ) );
 		if ( $theme_file ) {
 			return $theme_file;
@@ -362,6 +362,21 @@ add_action( 'pre_get_posts', 'pml_filter_archive_query' );
 function pml_get_file_url( $post_id ) {
 	$file_id = get_post_meta( $post_id, '_pml_file_id', true );
 	return $file_id ? wp_get_attachment_url( $file_id ) : '';
+}
+
+/**
+ * Returns the URL of the primary resources page (custom page or fallback).
+ */
+function pml_get_resources_page_url() {
+	$page = get_page_by_path( 'resources' );
+	if ( $page ) {
+		return get_permalink( $page );
+	}
+	$archive_url = get_post_type_archive_link( 'pdf_doc' );
+	if ( $archive_url ) {
+		return $archive_url;
+	}
+	return home_url( '/resources/' );
 }
 
 /**
@@ -598,7 +613,16 @@ function pml_deactivate() {
 }
 register_deactivation_hook( __FILE__, 'pml_deactivate' );
 
-// Uninstall cleanup is handled by uninstall.php.
-register_uninstall_hook( __FILE__, '__return_false' ); // Signals WP to use uninstall.php.
+// Flush rewrite rules on upgrade if version changed.
+function pml_check_version_flush() {
+	if ( get_option( 'pml_version' ) !== PML_VERSION ) {
+		pml_register_post_type();
+		pml_register_taxonomy();
+		flush_rewrite_rules( false );
+		update_option( 'pml_version', PML_VERSION );
+	}
+}
+add_action( 'init', 'pml_check_version_flush', 99 );
+
 
 

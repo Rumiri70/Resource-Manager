@@ -25,7 +25,7 @@ $query_obj = isset( $pml_query ) && $pml_query instanceof WP_Query ? $pml_query 
 // Base page URL without filter params
 $current_page_url = strtok( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), '?' );
 if ( empty( $current_page_url ) ) {
-	$current_page_url = get_post_type_archive_link( 'pdf_doc' );
+	$current_page_url = function_exists( 'pml_get_resources_page_url' ) ? pml_get_resources_page_url() : home_url( '/resources/' );
 }
 
 // Calculate total published PDF count for "All Categories" link

@@ -98,7 +98,7 @@ while ( have_posts() ) :
 
 				<!-- 4. Back to Resources Navigation -->
 				<footer class="pml-single-footer">
-					<a href="<?php echo esc_url( get_post_type_archive_link( 'pdf_doc' ) ); ?>" class="pml-btn pml-btn-back">
+					<a href="<?php echo esc_url( function_exists( 'pml_get_resources_page_url' ) ? pml_get_resources_page_url() : home_url( '/resources/' ) ); ?>" class="pml-btn pml-btn-back">
 						&larr; <?php esc_html_e( 'Back to All Resources', 'pdf-manager-lite' ); ?>
 					</a>
 				</footer>
@@ -149,7 +149,7 @@ while ( have_posts() ) :
 					<?php wp_reset_postdata(); ?>
 
 					<div class="pml-related-all">
-						<a href="<?php echo esc_url( get_post_type_archive_link( 'pdf_doc' ) ); ?>" class="pml-view-all-link">
+						<a href="<?php echo esc_url( function_exists( 'pml_get_resources_page_url' ) ? pml_get_resources_page_url() : home_url( '/resources/' ) ); ?>" class="pml-view-all-link">
 							<?php esc_html_e( 'Browse all resources &rarr;', 'pdf-manager-lite' ); ?>
 						</a>
 					</div>
