@@ -3,7 +3,7 @@
  * Plugin Name: Resources Manager
  * Plugin URI:  https://sibasi.co.ke
  * Description: A lightweight plugin to manage resources (PDF documents) with categories. Gives admins a simple upload workflow and viewers a filterable archive page or shortcode grid.
- * Version:     1.0.2
+ * Version:     1.0.3
  * Author:      Sibasi Ltd
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'PML_VERSION', '1.0.2' );
+define( 'PML_VERSION', '1.0.3' );
 define( 'PML_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PML_URL', plugin_dir_url( __FILE__ ) );
 
@@ -277,7 +277,9 @@ function pml_frontend_assets() {
 		has_shortcode( $post->post_content, 'resources_manager' ) ||
 		has_shortcode( $post->post_content, 'resources_grid' ) ||
 		has_shortcode( $post->post_content, 'pdf_archive' ) ||
-		has_shortcode( $post->post_content, 'resources_category' )
+		has_shortcode( $post->post_content, 'resources_category' ) ||
+		has_shortcode( $post->post_content, 'single_resource' ) ||
+		has_shortcode( $post->post_content, 'resource' )
 	);
 
 	if ( is_post_type_archive( 'pdf_doc' ) || is_tax( 'pdf_category' ) || is_singular( 'pdf_doc' ) || $has_shortcode ) {
@@ -514,6 +516,72 @@ function pml_shortcode_category( $atts ) {
 	return ob_get_clean();
 }
 add_shortcode( 'resources_category', 'pml_shortcode_category' );
+
+/* ------------------------------------------------------------------------
+ * 10b. Shortcode: [single_resource id="123"] or [single_resource slug="..."]
+ *      Renders a single specific resource alone.
+ *
+ *      Attributes:
+ *        id               (int)     – Post ID of the resource.
+ *        slug             (string)  – Post slug of the resource (if ID not known).
+ *        display          (string)  – 'card' (default) or 'embed' (full inline viewer).
+ *        show_description (string)  – 'yes' (default) or 'no'.
+ *        show_download    (string)  – 'yes' (default) or 'no'.
+ *        show_meta        (string)  – 'yes' (default) or 'no'.
+ * ---------------------------------------------------------------------- */
+function pml_shortcode_single_resource( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'id'               => 0,
+			'slug'             => '',
+			'display'          => 'card',
+			'show_description' => 'yes',
+			'show_download'    => 'yes',
+			'show_meta'        => 'yes',
+		),
+		$atts,
+		'single_resource'
+	);
+
+	$resource_id = absint( $atts['id'] );
+	$slug        = sanitize_title( $atts['slug'] );
+	$display     = in_array( strtolower( trim( $atts['display'] ) ), array( 'card', 'embed' ), true ) ? strtolower( trim( $atts['display'] ) ) : 'card';
+
+	$show_description = ( 'no' !== strtolower( trim( $atts['show_description'] ) ) );
+	$show_download    = ( 'no' !== strtolower( trim( $atts['show_download'] ) ) );
+	$show_meta        = ( 'no' !== strtolower( trim( $atts['show_meta'] ) ) );
+
+	$post_obj = null;
+
+	if ( $resource_id > 0 ) {
+		$post_obj = get_post( $resource_id );
+	} elseif ( ! empty( $slug ) ) {
+		$posts = get_posts( array(
+			'name'           => $slug,
+			'post_type'      => 'pdf_doc',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+		) );
+		if ( ! empty( $posts ) ) {
+			$post_obj = $posts[0];
+		}
+	}
+
+	if ( ! $post_obj || 'pdf_doc' !== $post_obj->post_type || 'publish' !== $post_obj->post_status ) {
+		return '<p class="pml-notice">' . esc_html__( 'Resource not found. Please provide a valid resource ID or slug.', 'pdf-manager-lite' ) . '</p>';
+	}
+
+	$file_url = pml_get_file_url( $post_obj->ID );
+	$file_id  = get_post_meta( $post_obj->ID, '_pml_file_id', true );
+	$terms    = get_the_terms( $post_obj->ID, 'pdf_category' );
+
+	ob_start();
+	include PML_PATH . 'templates/single-resource-shortcode.php';
+	return ob_get_clean();
+}
+add_shortcode( 'single_resource', 'pml_shortcode_single_resource' );
+add_shortcode( 'resource', 'pml_shortcode_single_resource' );
+
 
 /* ------------------------------------------------------------------------
  * 11. Flush rewrite rules on activation / deactivation
