@@ -159,6 +159,116 @@ function pml_admin_enqueue( $hook ) {
 add_action( 'admin_enqueue_scripts', 'pml_admin_enqueue' );
 
 /* ------------------------------------------------------------------------
+ * 4b. Admin Settings: Data Retention / Uninstall Options
+ * ---------------------------------------------------------------------- */
+function pml_add_admin_menu() {
+	add_submenu_page(
+		'edit.php?post_type=pdf_doc',
+		__( 'Resources Settings', 'pdf-manager-lite' ),
+		__( 'Settings', 'pdf-manager-lite' ),
+		'manage_options',
+		'pml-settings',
+		'pml_render_settings_page'
+	);
+}
+add_action( 'admin_menu', 'pml_add_admin_menu' );
+
+function pml_render_settings_page() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$message = '';
+	$error   = '';
+
+	if ( isset( $_POST['pml_settings_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['pml_settings_nonce'] ) ), 'pml_save_settings' ) ) {
+		$delete_requested    = isset( $_POST['pml_delete_data_on_uninstall'] ) && '1' === $_POST['pml_delete_data_on_uninstall'];
+		$confirmation_phrase = isset( $_POST['pml_delete_confirmation'] ) ? sanitize_text_field( wp_unslash( $_POST['pml_delete_confirmation'] ) ) : '';
+
+		if ( $delete_requested ) {
+			if ( 'DELETE' === trim( $confirmation_phrase ) ) {
+				update_option( 'pml_delete_data_on_uninstall', 1 );
+				$message = __( 'Settings saved: All plugin data will be deleted when the plugin is uninstalled.', 'pdf-manager-lite' );
+			} else {
+				$error = __( 'To enable data deletion on uninstall, you must type "DELETE" (in all caps) in the confirmation box.', 'pdf-manager-lite' );
+			}
+		} else {
+			update_option( 'pml_delete_data_on_uninstall', 0 );
+			$message = __( 'Settings saved: Data will NOT be deleted when the plugin is uninstalled (default).', 'pdf-manager-lite' );
+		}
+	}
+
+	$delete_on_uninstall = (bool) get_option( 'pml_delete_data_on_uninstall', 0 );
+	?>
+	<div class="wrap">
+		<h1><?php echo esc_html__( 'Resources Manager Settings', 'pdf-manager-lite' ); ?></h1>
+
+		<?php if ( ! empty( $message ) ) : ?>
+			<div class="notice notice-success is-dismissible"><p><?php echo esc_html( $message ); ?></p></div>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $error ) ) : ?>
+			<div class="notice notice-error is-dismissible"><p><?php echo esc_html( $error ); ?></p></div>
+		<?php endif; ?>
+
+		<form method="post" action="">
+			<?php wp_nonce_field( 'pml_save_settings', 'pml_settings_nonce' ); ?>
+
+			<h2><?php echo esc_html__( 'Plugin Uninstallation & Data Management', 'pdf-manager-lite' ); ?></h2>
+			<p class="description">
+				<?php echo esc_html__( 'Choose whether you want to preserve or permanently delete your resources and categories when the plugin is deleted.', 'pdf-manager-lite' ); ?>
+			</p>
+
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row"><?php echo esc_html__( 'Data Retention', 'pdf-manager-lite' ); ?></th>
+						<td>
+							<fieldset>
+								<label for="pml_delete_data_on_uninstall">
+									<input type="checkbox" name="pml_delete_data_on_uninstall" id="pml_delete_data_on_uninstall" value="1" <?php checked( $delete_on_uninstall ); ?> />
+									<strong><?php echo esc_html__( 'Permanently delete all Resources Manager data upon uninstallation', 'pdf-manager-lite' ); ?></strong>
+								</label>
+								<p class="description" style="margin-top: 5px;">
+									<?php echo esc_html__( 'By default, this is disabled. Your resources, categories, and attached file links will remain safe in WordPress even if this plugin is uninstalled.', 'pdf-manager-lite' ); ?>
+								</p>
+							</fieldset>
+						</td>
+					</tr>
+					<tr id="pml-confirm-row" style="<?php echo $delete_on_uninstall ? '' : 'display:none;'; ?>">
+						<th scope="row">
+							<label for="pml_delete_confirmation" style="color: #d63638;"><?php echo esc_html__( 'Type "DELETE" to confirm', 'pdf-manager-lite' ); ?></label>
+						</th>
+						<td>
+							<input type="text" name="pml_delete_confirmation" id="pml_delete_confirmation" value="<?php echo $delete_on_uninstall ? 'DELETE' : ''; ?>" placeholder="DELETE" class="regular-text" style="border-color: #d63638;" />
+							<p class="description" style="color: #d63638;">
+								<?php echo esc_html__( 'Security requirement: Type DELETE in all uppercase letters above to enable complete removal of all resources, taxonomies, and metadata upon uninstall.', 'pdf-manager-lite' ); ?>
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<?php submit_button( __( 'Save Settings', 'pdf-manager-lite' ) ); ?>
+		</form>
+
+		<script>
+		jQuery(document).ready(function($) {
+			$('#pml_delete_data_on_uninstall').on('change', function() {
+				if ($(this).is(':checked')) {
+					$('#pml-confirm-row').slideDown(200);
+				} else {
+					$('#pml-confirm-row').slideUp(200);
+					$('#pml_delete_confirmation').val('');
+				}
+			});
+		});
+		</script>
+	</div>
+	<?php
+}
+
+/* ------------------------------------------------------------------------
  * 5. Front-end assets (Styles & PDF.js preview renderer)
  * ---------------------------------------------------------------------- */
 function pml_frontend_assets() {
