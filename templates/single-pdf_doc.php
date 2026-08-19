@@ -22,7 +22,7 @@ while ( have_posts() ) :
 				<p class="pml-back-link">
 					<a href="<?php echo esc_url( get_post_type_archive_link( 'pdf_doc' ) ); ?>">&larr; <?php _e( 'Back to Resources', 'pdf-manager-lite' ); ?></a>
 				</p>
-				<h1 class="pml-single-title"><?php the_title(); ?></h1>
+				<h1 class="pml-single-title"><?php echo esc_html( get_the_title() ); ?></h1>
 				<div class="pml-single-meta">
 					<span class="pml-single-date"><?php echo esc_html( get_the_date() ); ?></span>
 					<?php if ( $terms && ! is_wp_error( $terms ) ) : ?>

@@ -5,7 +5,8 @@
  * Description: A lightweight plugin to manage resources (PDF documents) with categories. Gives admins a simple upload workflow and viewers a filterable archive page or shortcode grid.
  * Version:     1.0.0
  * Author:      Sibasi Ltd
- * License:     GPL2
+ * License:     GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: pdf-manager-lite
  */
 
@@ -35,14 +36,16 @@ function pml_register_post_type() {
 	);
 
 	register_post_type( 'pdf_doc', array(
-		'labels'        => $labels,
-		'public'        => true,
-		'has_archive'   => true,
-		'rewrite'       => array( 'slug' => 'resources', 'with_front' => false ),
-		'menu_icon'     => 'dashicons-media-document',
-		'supports'      => array( 'title', 'editor', 'thumbnail' ),
-		'show_in_rest'  => false,
-		'menu_position' => 20,
+		'labels'          => $labels,
+		'public'          => true,
+		'has_archive'     => true,
+		'rewrite'         => array( 'slug' => 'resources', 'with_front' => false ),
+		'menu_icon'       => 'dashicons-media-document',
+		'supports'        => array( 'title', 'editor', 'thumbnail' ),
+		'show_in_rest'    => false,
+		'menu_position'   => 20,
+		'capability_type' => 'post',
+		'map_meta_cap'    => true,
 	) );
 }
 add_action( 'init', 'pml_register_post_type' );
@@ -163,7 +166,8 @@ function pml_frontend_assets() {
 	$has_shortcode = is_a( $post, 'WP_Post' ) && (
 		has_shortcode( $post->post_content, 'resources_manager' ) ||
 		has_shortcode( $post->post_content, 'resources_grid' ) ||
-		has_shortcode( $post->post_content, 'pdf_archive' )
+		has_shortcode( $post->post_content, 'pdf_archive' ) ||
+		has_shortcode( $post->post_content, 'resources_category' )
 	);
 
 	if ( is_post_type_archive( 'pdf_doc' ) || is_tax( 'pdf_category' ) || is_singular( 'pdf_doc' ) || $has_shortcode ) {
@@ -338,7 +342,71 @@ add_shortcode( 'resources_grid', 'pml_shortcode_archive' );
 add_shortcode( 'pdf_archive', 'pml_shortcode_archive' );
 
 /* ------------------------------------------------------------------------
- * 10. Flush rewrite rules on activation / deactivation
+ * 10. Shortcode: [resources_category category="slug"]
+ *     Renders a clean grid of resources filtered to a single category.
+ *     No sidebar, no date filter — ideal for embedding on landing pages.
+ *
+ *     Attributes:
+ *       category       (string)  – Required. Slug of the pdf_category term.
+ *       posts_per_page (int)     – Default 12. Use -1 for all.
+ *       columns        (int)     – Grid columns 1–4. Default 3.
+ *       show_title     (string)  – 'yes'|'no'. Show the category name as heading. Default 'yes'.
+ * ---------------------------------------------------------------------- */
+function pml_shortcode_category( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'category'       => '',
+			'posts_per_page' => 12,
+			'columns'        => 3,
+			'show_title'     => 'yes',
+		),
+		$atts,
+		'resources_category'
+	);
+
+	// Sanitise attributes.
+	$category       = sanitize_title( $atts['category'] );
+	$posts_per_page = absint( $atts['posts_per_page'] ) ?: -1;
+	$columns        = min( 4, max( 1, absint( $atts['columns'] ) ) );
+	$show_title     = ( 'no' !== strtolower( trim( $atts['show_title'] ) ) );
+
+	// Guard: category is required.
+	if ( empty( $category ) ) {
+		return '<p class="pml-notice">' . esc_html__( 'Please specify a category for the [resources_category] shortcode.', 'pdf-manager-lite' ) . '</p>';
+	}
+
+	// Verify the term actually exists.
+	$term = get_term_by( 'slug', $category, 'pdf_category' );
+	if ( ! $term || is_wp_error( $term ) ) {
+		return '<p class="pml-notice">' . esc_html__( 'The specified resource category was not found.', 'pdf-manager-lite' ) . '</p>';
+	}
+
+	$query_args = array(
+		'post_type'      => 'pdf_doc',
+		'post_status'    => 'publish',
+		'posts_per_page' => $posts_per_page,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'pdf_category',
+				'field'    => 'slug',
+				'terms'    => $category,
+			),
+		),
+	);
+
+	$pml_cat_query = new WP_Query( $query_args );
+
+	ob_start();
+	include PML_PATH . 'templates/category-grid.php';
+	wp_reset_postdata();
+	return ob_get_clean();
+}
+add_shortcode( 'resources_category', 'pml_shortcode_category' );
+
+/* ------------------------------------------------------------------------
+ * 11. Flush rewrite rules on activation / deactivation
  * ---------------------------------------------------------------------- */
 function pml_activate() {
 	pml_register_post_type();
@@ -351,4 +419,8 @@ function pml_deactivate() {
 	flush_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, 'pml_deactivate' );
+
+// Uninstall cleanup is handled by uninstall.php.
+register_uninstall_hook( __FILE__, '__return_false' ); // Signals WP to use uninstall.php.
+
 

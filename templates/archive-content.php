@@ -23,7 +23,7 @@ $months           = array(
 $query_obj = isset( $pml_query ) && $pml_query instanceof WP_Query ? $pml_query : $GLOBALS['wp_query'];
 
 // Base page URL without filter params
-$current_page_url = strtok( $_SERVER['REQUEST_URI'] ?? '', '?' );
+$current_page_url = strtok( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), '?' );
 if ( empty( $current_page_url ) ) {
 	$current_page_url = get_post_type_archive_link( 'pdf_doc' );
 }
@@ -137,7 +137,7 @@ $total_published = wp_count_posts( 'pdf_doc' )->publish;
 							<?php if ( has_post_thumbnail() ) : ?>
 								<?php the_post_thumbnail( 'medium' ); ?>
 							<?php elseif ( $file_id && ( $att_img = wp_get_attachment_image( $file_id, 'medium' ) ) ) : ?>
-								<?php echo $att_img; ?>
+								<?php echo wp_kses_post( $att_img ); ?>
 							<?php elseif ( $file_url ) : ?>
 								<canvas class="pml-pdf-canvas" data-pdf-url="<?php echo esc_url( $file_url ); ?>"></canvas>
 								<span class="pml-pdf-icon pml-pdf-fallback" style="display:none;">PDF</span>
@@ -146,7 +146,7 @@ $total_published = wp_count_posts( 'pdf_doc' )->publish;
 							<?php endif; ?>
 						</div>
 						<div class="pml-card-body">
-							<h3 class="pml-card-title"><?php the_title(); ?></h3>
+							<h3 class="pml-card-title"><?php echo esc_html( get_the_title() ); ?></h3>
 							<div class="pml-card-meta">
 								<span class="pml-card-date"><?php echo esc_html( get_the_date() ); ?></span>
 								<?php
