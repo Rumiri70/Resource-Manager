@@ -3,7 +3,7 @@
  * Plugin Name: Resources Manager
  * Plugin URI:  https://sibasi.co.ke
  * Description: A lightweight plugin to manage resources (PDF documents) with categories. Gives admins a simple upload workflow and viewers a filterable archive page or shortcode grid.
- * Version:     1.0.1
+ * Version:     1.0.2
  * Author:      Sibasi Ltd
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'PML_VERSION', '1.0.1' );
+define( 'PML_VERSION', '1.0.2' );
 define( 'PML_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PML_URL', plugin_dir_url( __FILE__ ) );
 

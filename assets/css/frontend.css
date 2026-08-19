@@ -314,50 +314,409 @@
 	border-radius: 12px;
 }
 
-/* Single PDF page */
-.pml-single { max-width: 900px; margin: 0 auto; padding: 20px 0; }
-.pml-back-link a { text-decoration: none; color: #2271b1; font-size: 14px; }
-.pml-single-title { margin: 8px 0 4px; }
-.pml-single-meta { color: #666; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.pml-single-cats { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.pml-single-cats a {
+/* ==========================================================================
+   Single Resource Page Layout & Components
+   ========================================================================== */
+
+.pml-single {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 24px 15px;
+}
+
+.pml-single-layout {
+	display: grid;
+	grid-template-columns: 1fr 320px;
+	gap: 32px;
+	align-items: start;
+}
+
+.pml-single-article {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 28px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.pml-single-header {
+	margin-bottom: 20px;
+	border-bottom: 1px solid #f1f5f9;
+	padding-bottom: 18px;
+}
+
+.pml-single-title {
+	font-size: 26px;
+	font-weight: 700;
+	color: #1e293b;
+	line-height: 1.35;
+	margin: 0 0 14px 0;
+}
+
+/* 1. Metadata Pills Bar */
+.pml-single-meta-bar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.pml-pill {
 	display: inline-flex;
 	align-items: center;
-	background: #f1f5f9;
-	color: #4a5568;
-	border: 1px solid #e2e8f0;
+	gap: 6px;
 	font-size: 12px;
 	font-weight: 600;
 	line-height: 1;
-	padding: 4px 10px;
+	padding: 6px 12px;
 	border-radius: 9999px;
 	text-decoration: none;
 	transition: all 0.2s ease;
 }
-.pml-single-cats a:hover {
+
+.pml-pill .pml-icon {
+	flex-shrink: 0;
+}
+
+.pml-pill-date {
+	background: #f8fafc;
+	color: #64748b;
+	border: 1px solid #e2e8f0;
+	cursor: default;
+}
+
+.pml-pill-cat {
+	background: #76AB24;
+	color: #ffffff;
+	border: 1px solid #76AB24;
+	box-shadow: 0 1px 3px rgba(118, 171, 36, 0.2);
+}
+
+.pml-pill-cat:hover {
+	background: #5f8b1c;
+	border-color: #5f8b1c;
+	color: #ffffff;
+	transform: translateY(-1px);
+	box-shadow: 0 2px 6px rgba(118, 171, 36, 0.35);
+}
+
+/* 2. Resource Description */
+.pml-single-description {
+	font-size: 15px;
+	line-height: 1.7;
+	color: #334155;
+	margin-bottom: 24px;
+	background: #f8fafc;
+	border: 1px solid #edf2f7;
+	border-radius: 8px;
+	padding: 16px 20px;
+}
+
+.pml-single-description p:last-child {
+	margin-bottom: 0;
+}
+
+/* 3. File Display & Action Bar */
+.pml-single-file-section {
+	margin-bottom: 28px;
+}
+
+.pml-embed-wrap {
+	border: 1px solid #cbd5e1;
+	border-radius: 10px;
+	overflow: hidden;
+	background: #1e293b;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.pml-embed-frame {
+	width: 100%;
+	height: 75vh;
+	border: none;
+	display: block;
+}
+
+.pml-file-actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: 14px;
+	flex-wrap: wrap;
+}
+
+.pml-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1;
+	padding: 10px 18px;
+	border-radius: 9999px;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	border: 1px solid transparent;
+}
+
+.pml-btn-download {
+	background: #76AB24;
+	color: #ffffff;
+	border-color: #76AB24;
+	box-shadow: 0 2px 6px rgba(118, 171, 36, 0.3);
+}
+
+.pml-btn-download:hover {
+	background: #5f8b1c;
+	border-color: #5f8b1c;
+	color: #ffffff;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 10px rgba(118, 171, 36, 0.4);
+}
+
+.pml-btn-secondary {
+	background: #ffffff;
+	color: #475569;
+	border-color: #cbd5e1;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.pml-btn-secondary:hover {
+	background: #f1f5f9;
+	color: #1e293b;
+	border-color: #94a3b8;
+}
+
+.pml-no-file-notice {
+	padding: 24px;
+	text-align: center;
+	color: #e53e3e;
+	background: #fff5f5;
+	border: 1px solid #fed7d7;
+	border-radius: 8px;
+	font-weight: 500;
+}
+
+/* 4. Single Footer / Back Button */
+.pml-single-footer {
+	border-top: 1px solid #f1f5f9;
+	padding-top: 18px;
+}
+
+.pml-btn-back {
+	background: #f8fafc;
+	color: #475569;
+	border-color: #e2e8f0;
+	font-size: 13px;
+	padding: 8px 16px;
+}
+
+.pml-btn-back:hover {
 	background: #76AB24;
 	color: #ffffff;
 	border-color: #76AB24;
 }
-.pml-single-description { margin-bottom: 20px; line-height: 1.6; }
 
-.pml-embed-wrap {
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	overflow: hidden;
-	background: #f5f5f5;
+/* ==========================================================================
+   Sidebar: Related Resources
+   ========================================================================== */
+
+.pml-single-sidebar {
+	position: sticky;
+	top: 20px;
 }
-.pml-embed-frame { width: 100%; height: 85vh; border: none; display: block; }
 
-.pml-download { margin-top: 16px; }
-.pml-no-file { color: #a33; }
+.pml-related-widget {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 20px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.pml-related-title {
+	font-size: 16px;
+	font-weight: 700;
+	color: #1e293b;
+	margin: 0 0 14px 0;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #f1f5f9;
+}
+
+.pml-related-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.pml-related-card {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px;
+	border-radius: 8px;
+	border: 1px solid #f1f5f9;
+	background: #ffffff;
+	text-decoration: none;
+	color: inherit;
+	transition: all 0.2s ease;
+}
+
+.pml-related-card:hover {
+	background: #f8fafc;
+	border-color: #cbd5e1;
+	transform: translateX(2px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.pml-related-thumb {
+	width: 54px;
+	height: 68px;
+	border-radius: 6px;
+	overflow: hidden;
+	background: #f1f5f9;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #e2e8f0;
+}
+
+.pml-related-thumb img,
+.pml-related-thumb .pml-pdf-canvas {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.pml-related-thumb .pml-pdf-icon {
+	font-size: 10px;
+	padding: 4px 6px;
+	border-width: 1px;
+	letter-spacing: 0.5px;
+}
+
+.pml-related-body {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.pml-related-item-title {
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.3;
+	color: #1e293b;
+	margin: 0;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	transition: color 0.2s ease;
+}
+
+.pml-related-card:hover .pml-related-item-title {
+	color: #76AB24;
+}
+
+.pml-related-meta {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	font-size: 11px;
+	color: #94a3b8;
+}
+
+.pml-related-date {
+	font-size: 11px;
+}
+
+.pml-related-meta .pml-cat-pill {
+	font-size: 10px;
+	padding: 2px 7px;
+}
+
+.pml-no-related {
+	font-size: 13px;
+	color: #94a3b8;
+	margin: 10px 0;
+	font-style: italic;
+}
+
+.pml-related-all {
+	margin-top: 14px;
+	padding-top: 12px;
+	border-top: 1px solid #f1f5f9;
+	text-align: center;
+}
+
+.pml-view-all-link {
+	font-size: 12px;
+	font-weight: 600;
+	color: #76AB24;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.pml-view-all-link:hover {
+	color: #5f8b1c;
+	text-decoration: underline;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 991px) {
+	.pml-single-layout {
+		grid-template-columns: 1fr;
+		gap: 28px;
+	}
+
+	.pml-single-sidebar {
+		position: static;
+	}
+
+	.pml-related-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 12px;
+	}
+}
 
 @media (max-width: 768px) {
 	.pml-archive-layout {
 		grid-template-columns: 1fr;
 		gap: 20px;
 	}
-	.pml-embed-frame { height: 70vh; }
+
+	.pml-single-article {
+		padding: 18px;
+	}
+
+	.pml-single-title {
+		font-size: 21px;
+	}
+
+	.pml-embed-frame {
+		height: 65vh;
+	}
+
+	.pml-file-actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.pml-btn {
+		width: 100%;
+		text-align: center;
+	}
 }
+
 
 
