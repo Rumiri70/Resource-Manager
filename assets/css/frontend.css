@@ -15,19 +15,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
-	position: sticky;
-	top: 24px;
-	max-height: calc(100vh - 48px);
-	overflow-y: auto;
-}
-
-.pml-sidebar::-webkit-scrollbar {
-	width: 4px;
-}
-
-.pml-sidebar::-webkit-scrollbar-thumb {
-	background: #cbd5e1;
-	border-radius: 4px;
 }
 
 .pml-widget {
@@ -706,12 +693,6 @@
 	.pml-archive-layout {
 		grid-template-columns: 1fr;
 		gap: 20px;
-	}
-
-	.pml-sidebar {
-		position: static;
-		max-height: none;
-		overflow-y: visible;
 	}
 
 	.pml-single-article {
